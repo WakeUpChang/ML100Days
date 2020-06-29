@@ -23,7 +23,7 @@ app_train['CNT_CHILDREN_GROUP'] = pd.cut(app_train['CNT_CHILDREN'].values, cut_r
 print(app_train['CNT_CHILDREN_GROUP'].value_counts())
 
 
-grp = 'CNT_CHILDREN_GROUP'
+grp =[ 'CNT_CHILDREN_GROUP','TARGET']
 
 grouped_df = app_train.groupby(grp)['AMT_INCOME_TOTAL']
 print(grouped_df.mean())

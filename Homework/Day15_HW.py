@@ -40,3 +40,5 @@ app_train['DAYS_BIRTH'] = abs(app_train['DAYS_BIRTH'])
 print(app_train.corr()['TARGET'])
 
 sort_corr = np.sort(app_train.corr()['TARGET'],app_train.columns)
+
+

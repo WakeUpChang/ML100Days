@@ -35,7 +35,7 @@ age_data['YEARS_BIRTH'] = age_data['DAYS_BIRTH'] / 365 # day-age to year-age
 """
 Your Code Here
 """
-bin_cut =  np.arange(20,75,5)
+bin_cut = np.linspace(20, 70, num = 11) 
 age_data['YEARS_BINNED'] = pd.cut(age_data['YEARS_BIRTH'], bins = bin_cut) 
 
 # 顯示不同組的數量
@@ -43,7 +43,7 @@ print(age_data['YEARS_BINNED'].value_counts())
 print(age_data.head())
 
 
-year_group_sorted = age_data.groupby('YEARS_BINNED')
+year_group_sorted = np.sort(age_data['YEARS_BINNED'].unique())
 plt.figure(figsize=(8,6))
 for i in range(len(year_group_sorted)):
     sns.distplot(age_data.loc[(age_data['YEARS_BINNED'] == year_group_sorted[i]) & \
@@ -53,3 +53,18 @@ for i in range(len(year_group_sorted)):
                               (age_data['TARGET'] == 1), 'YEARS_BIRTH'], label = str(year_group_sorted[i]))
 plt.title('KDE with Age groups')
 plt.show()
+
+# 計算每個年齡區間的 Target、DAYS_BIRTH與 YEARS_BIRTH 的平均值
+age_groups  = age_data.groupby('YEARS_BINNED').mean()
+print(age_groups)
+
+plt.figure(figsize = (8, 8))
+
+px = year_group_sorted
+py = age_groups['TARGET']
+sns.barplot(px, py)
+
+# Plot labeling
+plt.xticks(rotation = 75); plt.xlabel('Age Group (years)'); plt.ylabel('Failure to Repay (%)')
+plt.title('Failure to Repay by Age Group');
+

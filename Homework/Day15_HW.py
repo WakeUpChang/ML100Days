@@ -39,6 +39,9 @@ app_train['DAYS_BIRTH'] = abs(app_train['DAYS_BIRTH'])
 
 print(app_train.corr()['TARGET'])
 
-sort_corr = np.sort(app_train.corr()['TARGET'],app_train.columns)
+sort_corr = app_train.corr()['TARGET'].sort_values()
 
+plt.scatter(app_train['EXT_SOURCE_3'], app_train['TARGET'])
+
+app_train.boxplot(by='TARGET', column='EXT_SOURCE_3')
 

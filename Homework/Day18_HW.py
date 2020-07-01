@@ -26,7 +26,7 @@ print('Path of read in data: %s' % (f_app))
 app_train = pd.read_csv(f_app)
 app_train.head()
 
-discreteData = pd.cut(app_train["AMT_INCOME_TOTAL"],bins= np.linspace(0,app_train["AMT_INCOME_TOTAL"].max(),100))
+discreteData = pd.cut(app_train["AMT_INCOME_TOTAL"],bins= np.linspace(0,app_train["AMT_INCOME_TOTAL"].max()+1,100))
 
 print(discreteData.value_counts())
 

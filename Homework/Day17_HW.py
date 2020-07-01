@@ -27,7 +27,6 @@ ages["equal_freq_age"] = pd.qcut(ages["age"], 4)
 print(ages["equal_freq_age"].value_counts()) # 每個 bin 的資料筆數是一樣的
 
 
+ages["customized_age_grp"] = pd.cut(ages["age"],bins= [0,10,20,30,50,100])
 
-ages["equal_tmp_age"] = pd.cut(ages["age"],bins= np.linspace(0,ages["age"].max(),5))
-
-print(ages["equal_tmp_age"].value_counts())
+print(ages["customized_age_grp"].value_counts())

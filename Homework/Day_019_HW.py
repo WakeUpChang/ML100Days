@@ -26,7 +26,7 @@ print('Path of read in data: %s' % (f_app))
 app_train = pd.read_csv(f_app)
 app_train.head()
 
-unique_house_type = np.sort(app_train['HOUSETYPE_MODE'].fillna('nan').unique())
+unique_house_type =app_train['HOUSETYPE_MODE'].unique()
 
 nrows = len(unique_house_type)
 ncols = nrows // 2
@@ -35,7 +35,7 @@ plt.figure(figsize=(10,30))
 for i in range(len(unique_house_type)):
     plt.subplot(nrows, ncols, i+1)
 
-    app_train.loc[(app_train['HOUSETYPE_MODE'] == unique_house_type[i])  , 'HOUSETYPE_MODE'].hist()
+    app_train.loc[(app_train['HOUSETYPE_MODE'] == unique_house_type[i])  , 'AMT_CREDIT'].hist()
     
     plt.title(str(unique_house_type[i]))
 plt.show()    

@@ -73,7 +73,8 @@ print(cross_val_score(estimator, train_X, train_Y, cv=5).mean())
 from scipy import stats
 df_fixed = copy.deepcopy(df)
 
-df_fixed['Fare'] = df_fixed['Fare'].replace(0, df_fixed['Fare'].mean())
+#df_fixed['Fare'] = df_fixed['Fare'].replace(0, df_fixed['Fare'].mean())
+df_fixed['Fare'] = df_fixed['Fare'] + 1
 
 df_fixed['Fare'] = stats.boxcox(df_fixed['Fare'])[0]
 sns.distplot(df_fixed['Fare'][:train_num])

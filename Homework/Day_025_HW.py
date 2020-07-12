@@ -49,6 +49,8 @@ print(f'shape : {train_X.shape}')
 print(f'score : {cross_val_score(estimator, train_X, train_Y, cv=5).mean()}')
 print(f'time : {time.time() - start} sec')
 
+
+train_X.nunique()
 # 均值編碼 + 線性迴歸
 data = pd.concat([df[:train_num], train_Y], axis=1)
 for c in df.columns:
@@ -56,11 +58,11 @@ for c in df.columns:
     mean_df.columns = [c, f'{c}_mean']
     data = pd.merge(data, mean_df, on=c, how='left')
     data = data.drop([c] , axis=1)
-data = data.drop(['Survived'] , axis=1)
+data = data.drop(['Survived', 'Name_mean', 'Ticket_mean'] , axis=1)
 estimator = LogisticRegression()
 start = time.time()
 print(f'shape : {train_X.shape}')
 print(f'score : {cross_val_score(estimator, data, train_Y, cv=5).mean()}')
 print(f'time : {time.time() - start} sec')
 
-## 標籤編碼
+## 均值

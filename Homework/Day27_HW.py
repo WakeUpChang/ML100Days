@@ -47,6 +47,17 @@ print(f'Linear Reg Score : {cross_val_score(Linear, train_X, train_Y, cv=5).mean
 GDBT = GradientBoostingRegressor()
 print(f'Gradient Boosting Reg Score : {cross_val_score(GDBT, train_X, train_Y, cv=5).mean()}')
 
+# 語法參閱 https://docs.python.org/3/library/datetime.html
+df['pickup_dow'] = df['pickup_datetime'].apply(lambda x: datetime.datetime.strftime(x, '%w')).astype('int64')
+df['pickup_woy'] = df['pickup_datetime'].apply(lambda x: datetime.datetime.strftime(x, '%W')).astype('int64')
+df.head()
+
+# 將結果使用線性迴歸 / 梯度提升樹分別看結果
+df_temp = df.drop(['pickup_datetime'] , axis=1)
+train_X = scaler.fit_transform(df_temp)
+print(f'Linear Reg Score : {cross_val_score(Linear, train_X, train_Y, cv=5).mean()}')
+print(f'Gradient Boosting Reg Score : {cross_val_score(GDBT, train_X, train_Y, cv=5).mean()}')
+
 # 加上"日週期"特徵 (參考講義"週期循環特徵")
 import math
 df['week_cycle'] = df['pickup_day']/3.5 + df['pickup_hour']/84 

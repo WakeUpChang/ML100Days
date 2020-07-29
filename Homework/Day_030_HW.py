@@ -52,12 +52,40 @@ train_X = MMEncoder.fit_transform(df)
 estimator = LogisticRegression()
 print(cross_val_score(estimator, train_X, train_Y, cv=5).mean())
 
-high_list = list((corr['Survived']>0.05 and corr['Survived']!=1).index)
-high_list.pop(-1)
-
-# 篩選相關係數1
+# 篩選相關係數大於 0.05 或小於 -0.05 的特徵
+high_list = list(corr[(corr['Survived']>0.05) | (corr['Survived']<-0.05)].index)
+high_list.pop(0)
 print(high_list)
 
 ## 特徵1 + 邏輯斯迴歸
 train_X = MMEncoder.fit_transform(df[high_list])
+print(cross_val_score(estimator, train_X, train_Y, cv=5).mean())
+
+
+# 篩選相關係數大於 0.05 或小於 -0.05 的特徵
+high_list = list(corr[corr['Survived']<1].index)
+high_list.pop(0)
+print(high_list)
+
+## 特徵1 + 邏輯斯迴歸
+train_X = MMEncoder.fit_transform(df[high_list])
+print(cross_val_score(estimator, train_X, train_Y, cv=5).mean())
+
+from sklearn.linear_model import Lasso
+L1_Reg = Lasso(alpha=0.001)
+train_X = MMEncoder.fit_transform(df)
+L1_Reg.fit(train_X, train_Y)
+print(L1_Reg.coef_)
+
+L1_mask = list((L1_Reg.coef_>0) | (L1_Reg.coef_<0))
+print(df.columns[L1_mask])
+
+from itertools import compress
+L1_mask = list((L1_Reg.coef_>0) | (L1_Reg.coef_<0))
+L1_list = list(compress(list(df), list(L1_mask)))
+print(L1_list)
+
+# L1_Embedding 特徵 + 線性迴歸
+
+train_X = MMEncoder.fit_transform(df[L1_list])
 print(cross_val_score(estimator, train_X, train_Y, cv=5).mean())

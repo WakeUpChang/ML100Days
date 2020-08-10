@@ -13,7 +13,13 @@ digits = datasets.load_digits()
 
 x_train, x_test, y_train, y_test = train_test_split(digits.data,digits.target,test_size=0.25,random_state=4)
 
-clf = GradientBoostingClassifier()
+clf = GradientBoostingClassifier(
+  loss="deviance", #Loss 的選擇，若改為 exponential 則會變成 Adaboosting 演算法，概念相同但實作稍微不同
+
+ learning_rate=0.1, #每棵樹對最終結果的影響，應與 n_estimators 成反比
+
+ n_estimators=100 #決策樹的數量
+ )
 
 # 訓練模型
 clf.fit(x_train, y_train)

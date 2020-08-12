@@ -26,8 +26,7 @@ trainLabels = pd.read_csv(data_path + 'trainLabels.csv',header=None)
 train_X, test_X, train_Y, test_Y = train_test_split(train, trainLabels, test_size=0.5)
 train_X, val_X, train_Y, val_Y = train_test_split(train, trainLabels, test_size=0.5)
 
-gdbt = GradientBoostingClassifier(subsample=0.93, n_estimators=320, min_samples_split=0.1, min_samples_leaf=0.3, 
-                                  max_features=4, max_depth=4, learning_rate=0.16)
+gdbt = GradientBoostingClassifier()
 
 onehot = OneHotEncoder()
 lr = LogisticRegression(solver='lbfgs', max_iter=1000)
@@ -36,12 +35,18 @@ gdbt.fit(train_X, train_Y)
 pred_gdbt = gdbt.predict(test_X)
 
 
-acc = metrics.accuracy_score(test_Y, pred_gdbt)
-print("Accuracy gdbt: ", acc)
+# acc = metrics.accuracy_score(test_Y, pred_gdbt)
+# print("Accuracy gdbt: ", acc)
 
 
-# pred_gdbt_test = gdbt.predict(test)
+
+pred_gdbt_test = gdbt.predict(test)
 
 
-# df = pd.DataFrame({'Solution':pred_gdbt_test})
-# df.to_csv('trytry.csv', index = True)
+submission = pd.DataFrame(pred_gdbt_test)
+print(submission.shape)
+submission.columns = ['Solution']
+submission['Id'] = np.arange(1,submission.shape[0]+1)
+submission = submission[['Id', 'Solution']]
+
+submission.to_csv('helloworld.csv', index = False)

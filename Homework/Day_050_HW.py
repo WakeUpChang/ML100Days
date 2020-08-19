@@ -257,7 +257,7 @@ estimators = [
      ('rf',rf)
  ]
 #stacking = StackingClassifier(estimators =estimators, final_estimator=LogisticRegression)
-stacking = StackingClassifier(classifiers =[lr,gdbt,rf], meta_classifier=meta_estimator)
+stacking = StackingClassifier(classifiers =[lr,gdbt,rf], meta_classifier=meta_estimator, use_probas=True, average_probas=False)
 
 stacking.fit(train_X, train_Y)
 stacking_pred = stacking.predict(test_X)

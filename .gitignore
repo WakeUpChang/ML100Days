@@ -3,3 +3,7 @@ Homework/data/trainLabels.csv
 Homework/data/test.csv
 Homework/data/data-science-london-scikit-learn.zip
 Homework/data/train.csv
+Homework/titanic_blending.csv
+Homework/titanic_gdbt.csv
+Homework/titanic_lr.csv
+Homework/titanic_rf.csv

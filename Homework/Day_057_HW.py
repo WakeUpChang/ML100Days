@@ -17,6 +17,10 @@ iris = datasets.load_iris()
 X = iris.data
 y = iris.target
 
+estimators = [('hc_ward', AgglomerativeClustering(n_clusters=3, linkage="ward")),
+              ('hc_complete', AgglomerativeClustering(n_clusters=3, linkage="complete")),
+              ('hc_average', AgglomerativeClustering(n_clusters=3, linkage="average"))]
+
 fignum = 1
 titles = ['ward', 'complate', 'average']
 for name, est in estimators:

@@ -41,4 +41,5 @@ model.add(Dropout(0.5))
 model.add(Dense(num_classes))
 model.add(Activation('softmax'))
 
+
 print(model.summary())

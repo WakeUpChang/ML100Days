@@ -35,7 +35,7 @@ from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D
 import matplotlib.pyplot as plt
 
 def show_train_history(train_history,lossFcn,train_acc,test_acc):
-    plt.Figure()
+    plt.figure()
     plt.plot(train_history.history[train_acc])
     plt.plot(train_history.history[test_acc])
     plt.title(lossFcn)
@@ -85,7 +85,7 @@ def trainModel(lossFcn):
     #模型訓練, "Train_History" 把訓練過程所得到的數值存起來
     train_history=model.fit(x_img_train_normalize, y_label_train_OneHot,
                             validation_split=0.25,
-                            epochs=3, batch_size=10, verbose=1)
+                            epochs=10, batch_size=120, verbose=1)
     
     show_train_history(train_history,lossFcn,'acc','val_acc')
     

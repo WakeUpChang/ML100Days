@@ -8,7 +8,7 @@ import os
 import keras
 
 # 本範例不需使用 GPU, 將 GPU 設定為 "無"
-os.environ["CUDA_VISIBLE_DEVICES"] = ""
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 # 從 Keras 的內建功能中，取得 train 與 test 資料集
 train, test = keras.datasets.cifar10.load_data()
@@ -41,7 +41,7 @@ def build_mlp():
 
 model = build_mlp()
 # 用 Keras 內建方法檢視模型各層參數量
-model.summary()
+# model.summary()
 
 optimizer = keras.optimizers.Adam(lr=0.001)
 model.compile(loss="categorical_crossentropy", metrics=["accuracy"], optimizer= optimizer)
@@ -58,8 +58,8 @@ import matplotlib.pyplot as plt
 train_loss = model.history.history["loss"]
 valid_loss = model.history.history["val_loss"]
 
-train_acc = model.history.history["acc"]
-valid_acc = model.history.history["val_acc"]
+train_acc = model.history.history["accuracy"]
+valid_acc = model.history.history["val_accuracy"]
 
 plt.figure()
 plt.plot(range(len(train_loss)), train_loss, label="train loss")
@@ -92,8 +92,8 @@ import matplotlib.pyplot as plt
 train_loss = SGDmodel.history.history["loss"]
 valid_loss = SGDmodel.history.history["val_loss"]
 
-train_acc = SGDmodel.history.history["acc"]
-valid_acc = SGDmodel.history.history["val_acc"]
+train_acc = model.history.history["accuracy"]
+valid_acc = model.history.history["val_accuracy"]
 
 plt.figure()
 plt.plot(range(len(train_loss)), train_loss, label="train loss")

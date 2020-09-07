@@ -1,4 +1,17 @@
 
+<<<<<<< HEAD
+Homework/data/application_test.csv
+Homework/.ipynb_checkpoints/Day_006_HW-checkpoint.ipynb
+Homework/data/application_train.csv
+Homework/data/data-science-london-scikit-learn.zip
+Homework/data/data-science-london-scikit-learn/test.csv
+Homework/data/data-science-london-scikit-learn/train.csv
+Homework/data/data-science-london-scikit-learn/trainLabels.csv
+Homework/data/house_train.csv.gz
+Homework/pred_gdbt_test.csv
+Homework/untitled0.py
+Homework/YourName.csv
+=======
 Homework/data/trainLabels.csv
 Homework/data/test.csv
 Homework/data/data-science-london-scikit-learn.zip
@@ -8,3 +21,4 @@ Homework/titanic_gdbt.csv
 Homework/titanic_lr.csv
 Homework/titanic_rf.csv
 Homework/titanic_stacking.csv
+>>>>>>> 687e062388a58b2d200e2ea8a105f5c7542f3893

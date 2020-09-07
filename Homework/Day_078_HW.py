@@ -10,9 +10,11 @@ import keras
 
 train, test = keras.datasets.cifar10.load_data()
 
-def preproc_x(x):
-    x = x.reshape((len(x), -1))
-    return keras.utils.normalize(x, axis=-1, order=2)
+def preproc_x(x, flatten=True):
+    x = 2*(((x - x.min()) / (x.max() - x.min()))-0.5)
+    if flatten:
+        x = x.reshape((len(x), -1))
+    return x
 
 
 def preproc_y(y, num_classes=10):
@@ -31,7 +33,7 @@ x_test = preproc_x(x_test)
 y_train = preproc_y(y_train)
 y_test = preproc_y(y_test)
 
-def build_mlp(input_shape, output_units=10, num_neurons=[512, 256, 128]):
+def build_mlp(input_shape, output_units=10, num_neurons=[512,256, 256,128, 128]):
     input_layer = keras.layers.Input(input_shape)
     
     for i, n_units in enumerate(num_neurons):
@@ -72,12 +74,14 @@ valid_loss = model.history.history["val_loss"]
 train_acc = model.history.history["acc"]
 valid_acc = model.history.history["val_acc"]
 
+plt.figure()
 plt.plot(range(len(train_loss)), train_loss, label="train loss")
 plt.plot(range(len(valid_loss)), valid_loss, label="valid loss")
 plt.legend()
 plt.title("Loss")
 plt.show()
 
+plt.figure()
 plt.plot(range(len(train_acc)), train_acc, label="train accuracy")
 plt.plot(range(len(valid_acc)), valid_acc, label="valid accuracy")
 plt.legend()

@@ -22,3 +22,5 @@ Homework/titanic_lr.csv
 Homework/titanic_rf.csv
 Homework/titanic_stacking.csv
 >>>>>>> 687e062388a58b2d200e2ea8a105f5c7542f3893
+*.csv
+*.zip

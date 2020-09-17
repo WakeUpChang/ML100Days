@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 """
+Created on Thu Sep 17 14:21:52 2020
+
+@author: sandra_chang
+"""
+# -*- coding: utf-8 -*-
+"""
 Created on Tue Sep 15 20:33:50 2020
 
 @author: sandra_chang
@@ -9,6 +15,9 @@ import keras
 import itertools
 from keras.layers import Dropout
 import matplotlib.pyplot as plt
+
+
+from keras.layers import BatchNormalization
 # Disable GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
@@ -41,41 +50,46 @@ def build_mlp(input_shape, output_units=10,num_neurons=[512, 256, 128], ratio=1e
     input_layer = keras.layers.Input(input_shape)
     for i, n_units in enumerate(num_neurons):
       if i == 0:
-          x = keras.layers.Dense(units=n_units, 
-                                 activation="relu", 
-                                 name="hidden_layer"+str(i+1))(input_layer)
-          x = Dropout(drp_ratio)(x)
-      else:
+          x = BatchNormalization()(input_layer)
           x = keras.layers.Dense(units=n_units, 
                                  activation="relu", 
                                  name="hidden_layer"+str(i+1))(x)
-          x = Dropout(drp_ratio)(x)
+          # x = Dropout(drp_ratio)(x)
+          # x = BatchNormalization()(x)
+      else:
+          x = BatchNormalization()(x)
+          x = keras.layers.Dense(units=n_units, 
+                                 activation="relu", 
+                                 name="hidden_layer"+str(i+1))(x)
+          # x = Dropout(drp_ratio)(x)
+          
     out = keras.layers.Dense(units=output_units, activation="softmax", name="output")(x)
     model = keras.models.Model(inputs=[input_layer], outputs=[out])
     return model
 
 LEARNING_RATE = 1e-3
-BATCH_SIZE = 256
+# BATCH_SIZE =[ 2, 16, 32, 128, 256]
+BATCH_SIZE =[ 128, 256]
 MOMENTUM = 0.95
 drop_ratio=0.1
 EPOCHS = 30
-Dropout_EXP = [0.1, 0.5, 0.9]
-LAYER_NEURONS = [[128, 128, 128], [128, 256, 256], [128, 256, 512]]
+# Dropout_EXP = [0.1, 0.5, 0.9]
+# LAYER_NEURONS = [[128, 128, 128], [128, 256, 256], [128, 256, 512]]
 results = {}
 """
 使用迴圈建立不同的帶不同 L1/L2 的模型並訓練
 """
-for i,(dropRatio, LAYER_NEURON) in enumerate(itertools.product(Dropout_EXP,LAYER_NEURONS)):
+for i in BATCH_SIZE:
     keras.backend.clear_session() # 把舊的 Graph 清掉
     # print("Experiment with Regulizer = %.6f" % (regulizer_ratio))
-    model = build_mlp(input_shape=x_train.shape[1:],num_neurons=LAYER_NEURON,drp_ratio=dropRatio)
+    model = build_mlp(input_shape=x_train.shape[1:])
     model.summary()
     optimizer = keras.optimizers.Adam(lr=LEARNING_RATE)
     model.compile(loss="categorical_crossentropy", metrics=["accuracy"], optimizer=optimizer)
     
     model.fit(x_train, y_train, 
               epochs=EPOCHS, 
-              batch_size=BATCH_SIZE, 
+              batch_size=i, 
               validation_data=(x_test, y_test), 
               shuffle=True)
 

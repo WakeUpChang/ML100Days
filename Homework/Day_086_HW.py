@@ -5,11 +5,11 @@ import itertools
 from keras.layers import Dropout
 import matplotlib.pyplot as plt
 from keras.callbacks import EarlyStopping
-
-
+from keras.callbacks import ModelCheckpoint
 from keras.layers import BatchNormalization
+
 # Disable GPU
-os.environ["CUDA_VISIBLE_DEVICES"] = ""
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 train, test = keras.datasets.cifar10.load_data()
 
@@ -62,23 +62,28 @@ LEARNING_RATE = 1e-3
 BATCH_SIZE =256
 MOMENTUM = 0.95
 drop_ratio=0.1
-EPOCHS = 10
+EPOCHS = 50
 EARLY_STOP = [10,25]
 # Dropout_EXP = [0.1, 0.5, 0.9]
 # LAYER_NEURONS = [[128, 128, 128], [128, 256, 256], [128, 256, 512]]
 results = {}
-"""
-使用迴圈建立不同的帶不同 L1/L2 的模型並訓練
-"""
-for i in EARLY_STOP:
+
+BOOL =[True,False]
+
+
+for i in BOOL:
     keras.backend.clear_session() # 把舊的 Graph 清掉
     # print("Experiment with Regulizer = %.6f" % (regulizer_ratio))
-    earlystop = EarlyStopping(monitor="val_loss", 
-                          patience=i, 
-                          verbose=1
-                          )
+    # earlystop = EarlyStopping(monitor="val_loss", 
+    #                       patience=i, 
+    #                       verbose=1
+    #                       )
+    model_ckpt = ModelCheckpoint(filepath="./ModelCheckpoint.h5", 
+                             monitor="val_loss", 
+                             save_best_only=i)
+    
     model = build_mlp(input_shape=x_train.shape[1:])
-    model.summary()
+    # model.summary()
     optimizer = keras.optimizers.Adam(lr=LEARNING_RATE)
     model.compile(loss="categorical_crossentropy", metrics=["accuracy"], optimizer=optimizer)
     
@@ -86,7 +91,7 @@ for i in EARLY_STOP:
               epochs=EPOCHS, 
               batch_size=BATCH_SIZE, 
               validation_data=(x_test, y_test), 
-              callbacks=[earlystop],
+              callbacks=[model_ckpt],
               shuffle=True)
 
     # Collect results
@@ -101,12 +106,17 @@ for i in EARLY_STOP:
                              'train-acc': train_acc,
                              'valid-acc': valid_acc}
     
-color_bar = ["r", "g", "b", "y", "m", "k"]
+color_bar = ["b", "y", "m", "k", "r", "g"]
+
+# Load back
+model = keras.models.load_model("./ModelCheckpoint.h5")
+loss_loadback, acc_loadback = model.evaluate(x_test, y_test)
 
 plt.figure(figsize=(8,6))
 for i, cond in enumerate(results.keys()):
     plt.plot(range(len(results[cond]['train-loss'])),results[cond]['train-loss'], '-', label=cond, color=color_bar[i])
     plt.plot(range(len(results[cond]['valid-loss'])),results[cond]['valid-loss'], '--', label=cond, color=color_bar[i])
+plt.hlines(y=loss_loadback, xmin=0, xmax=len(train_loss), colors='r', linestyles='--')
 plt.title("Loss")
 plt.ylim([0, 5])
 plt.legend()
@@ -116,6 +126,7 @@ plt.figure(figsize=(8,6))
 for i, cond in enumerate(results.keys()):
     plt.plot(range(len(results[cond]['train-acc'])),results[cond]['train-acc'], '-', label=cond, color=color_bar[i])
     plt.plot(range(len(results[cond]['valid-acc'])),results[cond]['valid-acc'], '--', label=cond, color=color_bar[i])
+plt.hlines(y=acc_loadback, xmin=0, xmax=len(train_loss), colors='r', linestyles='--')
 plt.title("Accuracy")
 plt.legend()
 plt.show()

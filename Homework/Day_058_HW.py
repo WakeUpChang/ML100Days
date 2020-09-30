@@ -34,7 +34,7 @@ no_structure = np.random.rand(n_samples, 2), None
 plt.figure(figsize=(10, 8))
 plot_num = 1
 default_base = {'n_neighbors': 10, 'n_clusters': 3}
-datasets = [(noisy_moons, {'n_clusters': 2}), (blobs, {'n_clusters': 3}), (no_structure, {'n_clusters': 2})]
+datasets = [(noisy_moons, {'n_clusters': 2}), (blobs, {}), (no_structure, {'n_clusters': 100})]
 
 # 執行各種樣板資料的繪圖迴圈
 for i_dataset, (dataset, algo_params) in enumerate(datasets):

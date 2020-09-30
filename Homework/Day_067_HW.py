@@ -25,7 +25,7 @@ print(y_label_test.shape)
 #            5:"dog",6:"frog",7:"horse",8:"ship",9:"truck"}
 #
 ##導入影像列印模組
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 #
 ##宣告一個影像標記的函數
 #def plot_images_labels_prediction(images,labels,prediction,
@@ -56,4 +56,5 @@ x_img_test_normalize = x_img_test.astype('float32') / 255.0
 from keras.utils import np_utils
 y_label_train_OneHot = np_utils.to_categorical(y_label_train)
 y_label_test_OneHot = np_utils.to_categorical(y_label_test)
+
 

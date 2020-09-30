@@ -48,7 +48,6 @@ def build_mlp(input_shape, Lx, output_units=10, ratio=1e-4):
 
 ## 超參數設定
 LEARNING_RATE = 1e-3
-EPOCHS = 50
 BATCH_SIZE = 256
 MOMENTUM = 0.95
 LxRegularization = [l1, l2]

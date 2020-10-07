@@ -86,7 +86,7 @@ def build_mlp(input_shape, output_units=10, num_neurons=[512, 256, 128]):
 
 ## 超參數設定
 LEARNING_RATE = 1e-3
-EPOCHS = 50
+EPOCHS = 10
 BATCH_SIZE = 1024
 MOMENTUM = 0.95
 
@@ -100,10 +100,10 @@ import keras.backend as K
 """
 # 撰寫自定義的 loss function: focal loss (https://blog.csdn.net/u014380165/article/details/77019084)
 """
-def focal_loss(gamma=2., alpha=4.):
+def combined_loss(ce_weights=0.7, gamma=2., alpha=4.):
     gamma = float(gamma)
     alpha = float(alpha)
-    def focal_loss_fixed(y_true, y_pred):
+    def combined_loss_fixed(y_true, y_pred):
         """Focal loss for multi-classification
         FL(p_t)=-alpha(1-p_t)^{gamma}ln(p_t)
         """
@@ -116,24 +116,30 @@ def focal_loss(gamma=2., alpha=4.):
         weight = tf.multiply(y_true, tf.pow(tf.subtract(1., model_out), gamma))
         fl = tf.multiply(alpha, tf.multiply(weight, ce))
         reduced_fl = tf.reduce_max(fl, axis=1)
-        return tf.reduce_mean(reduced_fl)
-    return focal_loss_fixed
-
-def cross_entropy_loss():
-    def cross_entropy_loss_fixed(y_true, y_pred):
-        loss_fn = keras.losses.CategoricalCrossentropy(from_logits=True)
+        
+        loss_fn = keras.losses.CategoricalCrossentropy()
         loss_value = loss_fn(y_true, y_pred)
-        return loss_value        
-    return cross_entropy_loss_fixed
+        
+        # loss_value = keras.losses.categorical_crossentropy(y_true, y_pred)
+        
+        return tf.reduce_mean(reduced_fl)*(1-ce_weights) + loss_value*ce_weights
+    return combined_loss_fixed
+
+# def cross_entropy_loss():
+#     def cross_entropy_loss_fixed(y_true, y_pred):
+#         loss_fn = keras.losses.CategoricalCrossentropy(from_logits=True)
+#         loss_value = loss_fn(y_true, y_pred)
+#         return loss_value        
+#     return cross_entropy_loss_fixed
 
 
-def combined_loss(ce_weights):
-    return cross_entropy_loss()*ce_weights+focal_loss()*(1-ce_weights)
+# def combined_loss(ce_weights):
+#     return cross_entropy_loss()*ce_weights+focal_loss()*(1-ce_weights)
 
 # In[8]:
 
 ce_weights_list = [0., 0.3, 0.5, 0.7, 1]
-
+results = {}
 
 for i in ce_weights_list:
     keras.backend.clear_session()
@@ -153,31 +159,40 @@ for i in ce_weights_list:
              )
     
     # Collect results
-    train_loss = model.history.history["loss"]
-    valid_loss = model.history.history["val_loss"]
-    train_acc = model.history.history["acc"]
-    valid_acc = model.history.history["val_acc"]
-    
-    valid_f1sc = model.history.history['val_f1sc']
-
-
+    exp_name_tag = ("exp-%s" % (i))
+    results[exp_name_tag] = {'train-loss': model.history.history["loss"],
+                             'valid-loss': model.history.history["val_loss"],
+                             'train-acc': model.history.history["accuracy"],
+                             'valid-acc': model.history.history["val_accuracy"]}
 # In[9]:
 
 
 import matplotlib.pyplot as plt
+import matplotlib.cm as mplcm
+import matplotlib.colors as colors
 
-plt.plot(range(len(train_loss)), train_loss, label="train loss")
-plt.plot(range(len(valid_loss)), valid_loss, label="valid loss")
-plt.legend()
+NUM_COLORS = len(results.keys())
+
+cm = plt.get_cmap('gist_rainbow')
+cNorm  = colors.Normalize(vmin=0, vmax=NUM_COLORS-1)
+scalarMap = mplcm.ScalarMappable(norm=cNorm, cmap=cm)
+color_bar = [scalarMap.to_rgba(i) for i in range(NUM_COLORS)]
+
+plt.figure(figsize=(8,6))
+for i, cond in enumerate(results.keys()):
+    plt.plot(range(len(results[cond]['train-loss'])),results[cond]['train-loss'], '-', label=cond, color=color_bar[i])
+    plt.plot(range(len(results[cond]['valid-loss'])),results[cond]['valid-loss'], '--', label=cond, color=color_bar[i])
 plt.title("Loss")
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 plt.show()
 
-plt.plot(range(len(train_acc)), train_acc, label="train accuracy")
-plt.plot(range(len(valid_acc)), valid_acc, label="valid accuracy")
-plt.legend()
+plt.figure(figsize=(8,6))
+for i, cond in enumerate(results.keys()):
+    plt.plot(range(len(results[cond]['train-acc'])),results[cond]['train-acc'], '-', label=cond, color=color_bar[i])
+    plt.plot(range(len(results[cond]['valid-acc'])),results[cond]['valid-acc'], '--', label=cond, color=color_bar[i])
 plt.title("Accuracy")
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 plt.show()
-
 
 # ## Work
 # 1. 請自行定義一個 loss function, 為 0.3 * focal loss + 0.7 cross-entropy，訓練並比較結果

@@ -132,8 +132,8 @@ model.fit(x_train, y_train,
 # Collect results
 train_loss = model.history.history["loss"]
 valid_loss = model.history.history["val_loss"]
-train_acc = model.history.history["accuracy"]
-valid_acc = model.history.history["val_accuracy"]
+train_acc = model.history.history["acc"]
+valid_acc = model.history.history["val_acc"]
 
 """Code Here
 將 tp/tn 從訓練完的模型中取出

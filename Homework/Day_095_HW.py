@@ -18,17 +18,6 @@ import numpy as np
 import h5py
 import matplotlib.pyplot as plt
 
-# 繪圖結果直接顯示在Jupyter cell 之內
-get_ipython().run_line_magic('matplotlib', 'inline')
-plt.rcParams['figure.figsize'] = (5.0, 4.0) #  設定繪圖板的大小
-plt.rcParams['image.interpolation'] = 'nearest'
-plt.rcParams['image.cmap'] = 'gray'
-
-# autoreload。可以讓我們不退出IPython就動態修改代碼，在執行代碼前IPython會幫我們自動重載改動的模塊
-get_ipython().run_line_magic('load_ext', 'autoreload')
-get_ipython().run_line_magic('autoreload', '2')
-np.random.seed(1)
-
 
 # In[ ]:
 

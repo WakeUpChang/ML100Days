@@ -12,7 +12,7 @@ import os
 import keras
 
 # 本範例不需使用 GPU, 將 GPU 設定為 "無"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 
 # In[2]:
@@ -86,7 +86,7 @@ def build_mlp(input_shape, output_units=10, num_neurons=[512, 256, 128]):
 
 ## 超參數設定
 LEARNING_RATE = 1e-3
-EPOCHS = 3
+EPOCHS = 10
 BATCH_SIZE = 1024
 MOMENTUM = 0.95
 

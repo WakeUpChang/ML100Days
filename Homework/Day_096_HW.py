@@ -50,8 +50,8 @@ model.summary()
 # 
 # 1. 是否有對資料做標準化 (normalization)? 如果有，在哪幾行?  37.38
 # 2. 使用的優化器 Optimizer 為何? Adadelta
-# 3. 模型總共疊了幾層卷積層? 3
-# 4. 模型的參數量是多少? so many
+# 3. 模型總共疊了幾層卷積層? 2
+# 4. 模型的參數量是多少? Total params: 1,199,882 Trainable params: 1,199,882 Non-trainable params: 0
 # 
 
 # In[ ]:

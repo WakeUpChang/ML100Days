@@ -39,14 +39,6 @@ height_shift_range=0.2,
 horizontal_flip=True)
 
 #%%
-def cifar_generator(x_train,y_train, batch_size=32):
-    while True:
-        for indexs in range(0, len(x_train), batch_size):
-            images = next(data_generator.flow(x_train, shuffle=False))
-            labels = y_train[indexs: indexs+batch_size]
-            yield images, labels
-
-#%%
 model = Sequential()
 model.add(Conv2D(32, (3, 3), padding='same',
                  input_shape=x_train.shape[1:]))
@@ -75,7 +67,7 @@ model.compile(loss='categorical_crossentropy',
               optimizer=RMSprop(),
               metrics=['accuracy'])
 
-history = model.fit(cifar_generator(x_train,y_train),
+history = model.fit(data_generator.flow(x_train,y_train, shuffle=False),
                     steps_per_epoch=1000, epochs=epochs,
                     validation_data=(x_test, y_test))
 score = model.evaluate(x_test, y_test, verbose=0)

@@ -68,7 +68,8 @@ model.compile(loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 history = model.fit_generator(cifar_generator(x_train,y_train),
-                    steps_per_epoch=10, epochs=1,
+                    steps_per_epoch=int(len(x_train)/batch_size),
+                    epochs=epochs,
                     validation_data=(x_test, y_test))
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])

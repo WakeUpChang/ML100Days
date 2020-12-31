@@ -217,6 +217,8 @@ callbacks = [ck_epoch_weight, ck_best_weight, lr_reducer]
 
 epochs = 80
 
+WEIGHTS_FINAL = 'model-test.h5'
+
 history = main_model.fit(
     train_data_gen,
     epochs=epochs,
@@ -224,6 +226,9 @@ history = main_model.fit(
     callbacks=callbacks,
     workers=2
 )
+
+main_model.save(WEIGHTS_FINAL)
+
 
 #%%
 
